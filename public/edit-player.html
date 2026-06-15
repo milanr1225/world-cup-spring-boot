@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        #games {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .game-card {
+            width: 18rem;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <div class="container">
+        <div class="crud-container">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Edit Player</strong>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID:</label>
+                        <input type="number" class="form-control" id="id" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position:</label>
+                        <input type="text" class="form-control" id="position">
+                    </div>
+                    <div class="mb-3">
+                        <label for="team" class="form-label">Team:</label>
+                        <select class="form-select" id="team"></select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-success" id="save">
+                        <i class="fa-solid fa-floppy-disk"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <pre id="json"></pre>
+    </div>
+    <footer class="text-center border-top boja-footer mt-auto">
+        <br>
+        All of the rights to the real info is held by FIFA, this is a learning project.&copy;
+        <i class="fa-brands fa-instagram fa-2x"></i>
+        <i class="fa-brands fa-x-twitter fa-2x"></i>
+        <i class="fa-brands fa-facebook-f fa-2x"></i>
+        <br><br>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/utils.js"></script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        const id = params.get('id')
+
+        const inputId = document.getElementById('id')
+        const inputName = document.getElementById('name')
+        const inputPosition = document.getElementById('position')
+        const inputTeam = document.getElementById('team')
+
+        function openAll() {
+            window.location.href = '/players.html'
+        }
+
+        if (id == null || id == '') {
+            openAll()
+        }
+
+         retrieveData(`/api/players/${id}`, (data) => {
+            inputId.value = data.playerId
+            inputName.value = data.name
+            inputPosition.value = data.position
+
+            fetch('/api/teams')
+                .then(rsp => rsp.json())
+                .then(teams => {
+                    for (let team of teams) {
+                        const opt = document.createElement('option')
+                        opt.value = team.teamId
+                        opt.innerText = team.name
+                        inputTeam.appendChild(opt)
+                    }
+                    
+                    inputTeam.value = data.team.teamId
+                })
+
+            document.getElementById('save')
+                .addEventListener('click', () => {
+                    showConfirm('Save Player?', () => {
+                        fetch(`/api/players/${id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                playerId: inputId.value,
+                                name: inputName.value,
+                                position: inputPosition.value,
+                                team: {
+                                    teamId: inputTeam.value
+                                }
+                            })
+                        }).then(rsp => openAll())
+                    })
+                })
+        })
+    </script>
+</body>
+
+</html>

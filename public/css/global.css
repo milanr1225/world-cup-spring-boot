@@ -1,0 +1,49 @@
+body{
+    background-color: #F5F5F5;
+    font-family: 'Oswald', sans-serif;
+}
+
+.boja1{
+    background-color: #1A1953 !important;
+}
+
+.boja1 .nav-link,
+.boja1 .navbar-brand {
+    color: white !important;
+}
+
+.boja1 .nav-link:hover {
+    color: white !important;
+}
+
+.boja2{
+    background-color: #2F2FE4 !important;
+    color: white;
+    border: 3px solid #1A1953;
+    border-radius: 8px;
+}
+
+.boja3{
+    background-color: #2F2FE4 !important;
+    color: white;
+    border: 3px solid #1A1953;
+}
+
+.boja-footer{
+    background-color: #1A1953 !important;
+    color: white !important;
+}
+
+.boja-button{
+    background-color: #1A1953;
+}
+
+#opening-pic{
+    width: 50%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    border: 3px solid white;
+    border-radius: 8px;
+}
