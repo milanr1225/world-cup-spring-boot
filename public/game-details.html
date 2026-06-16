@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Preview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        #games {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .game-card {
+            width: 18rem;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <div class="container d-flex gap-3">
+        <div class="card w-50">
+            <div class="card-header fw-bold" id="host-name">
+                <h1>Host: </h1>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <h2>Name</h2>
+                            </th>
+                            <th scope="col">
+                                <h2>Position</h2>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="host-team"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card w-50">
+            <div class="card-header fw-bold" id="guest-name">
+                <h1>Guest: </h1>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <h2>Name</h2>
+                            </th>
+                            <th scope="col">
+                                <h2>Position</h2>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="guest-team"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="mt-auto text-center border-top boja-footer">
+        <br>
+        All of the rights to the real info is held by FIFA, this is a learning project.&copy;
+        <i class="fa-brands fa-instagram fa-2x"></i>
+        <i class="fa-brands fa-x-twitter fa-2x"></i>
+        <i class="fa-brands fa-facebook-f fa-2x"></i>
+        <br><br>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/utils.js"></script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        const id = params.get('id')
+
+        function openAll() {
+            window.location.href = '/index.html'
+        }
+
+        if (id == null || id == '') {
+            openAll()
+        }
+
+        retrieveData(`/api/games/${id}`, (data) => {
+            document.getElementById('host-name').innerHTML += `<h1>${data.host.name}</h1>`
+            document.getElementById('guest-name').innerHTML += `<h1>${data.guest.name}</h1>`
+
+            retrieveData(`/api/players/team/${data.host.teamId}`, (data) => {
+                const hostBody = document.getElementById('host-team')
+                data.forEach(player => {
+                    hostBody.innerHTML += `
+                <tr>
+                    <td>${player.name}</td>
+                    <td>${player.position}</td>
+                </tr>
+            `
+                })
+            })
+
+            retrieveData(`/api/players/team/${data.guest.teamId}`, (data) => {
+                const guestBody = document.getElementById('guest-team')
+                data.forEach(player => {
+                    guestBody.innerHTML += `
+                <tr>
+                    <td>${player.name}</td>
+                    <td>${player.position}</td>
+                </tr>
+            `
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -69,7 +69,7 @@
                                 <div class="card-body text-center boja2">
                                     <h5 class="card-title">${game.host.name} vs ${game.guest.name}</h5>
                                     <h6 class="card-subtitle mb-2">${game.location}@${game.timeStart.replace('T', ' ')}</h6>
-                                    <button type="button" class="btn btn-success boja-button">Details</button>
+                                    <button type="button" class="btn btn-success boja-button" onclick="window.location.href='/game-details.html?id=' + ${game.gameId}">Details</button>
                                 </div>
                             </div>
           `

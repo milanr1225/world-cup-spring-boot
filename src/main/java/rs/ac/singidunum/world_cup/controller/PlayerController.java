@@ -25,6 +25,11 @@ public class PlayerController {
         return ResponseEntity.of(service.getById(id));
     }
 
+    @GetMapping("/team/{teamId}")
+    public List<Player> getPlayersByTeam(@PathVariable Integer teamId) {
+    return service.getPlayersByTeam(teamId);
+    }
+
     @PostMapping
     public Player createPlayer(@RequestBody Player entity){
         return service.create(entity);

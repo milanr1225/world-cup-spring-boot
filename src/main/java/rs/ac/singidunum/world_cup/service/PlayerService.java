@@ -2,6 +2,9 @@ package rs.ac.singidunum.world_cup.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import rs.ac.singidunum.world_cup.entity.Player;
 import rs.ac.singidunum.world_cup.repository.PlayerRepository;
 
@@ -21,6 +24,10 @@ public class PlayerService {
 
     public Optional<Player> getById(Integer id){
         return repository.findOneByPlayerIdAndDeletedAtIsNull(id);
+    }
+
+    public List<Player> getPlayersByTeam(Integer teamId) {
+        return repository.findAllByTeamTeamIdAndDeletedAtIsNull(teamId);
     }
 
     public Player create(Player entity){
